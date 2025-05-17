@@ -1,0 +1,93 @@
+@media screen and (max-width: 360px) {
+ 
+  
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    width: 80%;
+    margin: 0 auto;
+    height: 92vh;
+    flex-wrap: wrap;
+  
+    .login, .signup {
+      width: 45%;
+      padding: 1.5rem;
+      border: 2px solid white;
+      border-radius: 0.5rem;
+      background-color: #1f2937;
+      transition: all 0.3s ease;
+  
+      form {
+        width: 90%;
+        margin: 1rem auto;
+  
+        .group {
+          margin: 1rem 0;
+  
+          label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 1rem;
+          }
+  
+          input, select {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 3px solid #4caf50;
+            background: transparent;
+            color: white;
+            outline: none;
+            font-weight: 500;
+          }
+        }
+  
+        button {
+          width: 100%;
+          padding: 0.5rem 1rem;
+          border: 3px solid #4caf50;
+          background: transparent;
+          color: white;
+          font-weight: 600;
+          border-radius: 9999px;
+          transition: 0.3s;
+          cursor: pointer;
+  
+          &:hover {
+            background-color: #4caf50;
+          }
+        }
+      }
+    }
+  
+    .login {
+      transform: rotate(15deg);
+      &:hover {
+        transform: rotate(0deg) translateX(50%);
+        z-index: 10;
+      }
+    }
+  
+    .signup {
+      &:hover {
+        transform: rotate(0deg);
+        z-index: 10;
+      }
+    }
+  }
+  
+}
+  @media screen and (max-width: 768px) {
+    .container {
+      flex-direction: column;
+      height: auto;
+  
+      .login, .signup {
+        width: 100%;
+        transform: none !important;
+      }
+    }
+  }
+  
