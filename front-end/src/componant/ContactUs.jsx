@@ -30,7 +30,7 @@ async function handleSubmit(e) {
   }
   console.log("new data is : ",Data)
   
-  const response = axios.post("http://localhost:5000/api/users/contact",newData, {
+  const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/contact`,newData, {
     withCredentials:true,
     headers: {
        Authorization: localStorage.getItem("authToken"),

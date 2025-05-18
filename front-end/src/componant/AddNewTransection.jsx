@@ -11,7 +11,7 @@ function AddNewTransection({ Adding , setAdding}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/transactions', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/transactions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

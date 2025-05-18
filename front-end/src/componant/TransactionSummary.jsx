@@ -28,7 +28,7 @@ function TransactionSummary() {
         queryParams += queryParams ? `&endDate=${dateRange.endDate}` : `endDate=${dateRange.endDate}`;
       }
       
-      const url = `http://localhost:5000/api/transactions/summary${queryParams ? `?${queryParams}` : ''}`;
+      const url = `${import.meta.env.VITE_API_BASE_URL}/api/transactions/summary${queryParams ? `?${queryParams}` : ''}`;
       
       const response = await fetch(url, {
         method: 'GET',

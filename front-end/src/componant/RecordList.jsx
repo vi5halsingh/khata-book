@@ -98,7 +98,7 @@ function RecordList(props) {
   // Handle toggle favorite
   const toggleFavorite = async (id, currentFavorite) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/transactions/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/transactions/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

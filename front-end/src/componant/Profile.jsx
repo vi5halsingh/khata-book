@@ -22,7 +22,7 @@ function Profile() {
     // Fetch user profile data when component mounts
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/users/profile", {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/users/profile`, {
           withCredentials: true,
         });
        

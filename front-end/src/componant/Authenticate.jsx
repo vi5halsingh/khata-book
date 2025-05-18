@@ -24,7 +24,7 @@ function Authenticate() {
       
       try {
         console.log("Sending data:", Data);
-        const response = await fetch("http://localhost:5000/api/users/register", {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -75,7 +75,7 @@ function Authenticate() {
         
         // console.log("Sending login data:", loginData);
         
-     const response = await axios.post("http://localhost:5000/api/users/login", loginData,{
+     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/login`, loginData,{
       withCredentials:true,
      })
         const data = await response.data;
