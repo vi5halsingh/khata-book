@@ -3,6 +3,7 @@ const Express = require('express')
 const http = require('http')
 const cors = require('cors')
 const helmet = require('helmet')
+const compression = require('compression')
 const cookieParser = require('cookie-parser')
 const app = Express()
 const server = http.createServer(app)
@@ -10,7 +11,7 @@ app.use(Express.urlencoded({extended:true }))
 app.use(Express.json())
 app.use(cookieParser())
 
-// Updated CORS configuration
+
 app.use(cors({
   origin: ['http://localhost:5173', 'http://[::1]:5173'],
   credentials: true,
@@ -19,7 +20,7 @@ app.use(cors({
 }))
 
 const connectDB = require('./config/db')
-// Connect to MongoDB database
+
 connectDB()
   .then(() => {
     console.log('Database connected successfully')
@@ -29,18 +30,45 @@ connectDB()
     process.exit(1)
   })
 
-//importing all the routes here
 const userRoute = require('./Routes/User.Routes')
 const transactionRoute = require('./Routes/Transaction.Routes')
 
 app.use('/api/users',userRoute)
 app.use('/api/transactions', transactionRoute)
 
-// Add this near the top of server.js
+
 if (process.env.NODE_ENV === 'production') {
   app.use(helmet());
   app.use(compression());
 }
+
+// Add after helmet and compression requires
+const rateLimit = require('express-rate-limit');
+const winston = require('winston');
+
+// Add this before route definitions
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+
+// Apply to all requests
+app.use(limiter);
+
+// Add winston logging configuration
+const logger = winston.createLogger({
+  transports: [new winston.transports.Console()],
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  )
+});
+
+// Add logging middleware
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
+});
 
 // After all other routes
 app.use((req, res) => {
