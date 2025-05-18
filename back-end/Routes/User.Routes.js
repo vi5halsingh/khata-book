@@ -1,6 +1,6 @@
 const express = require('express');
 const Router = express();
-const UserController = require('../Controller/User.controller.js'); 
+const UserController = require('../Controller/User.Controller.js'); 
 Router.get('/', (req, res) => {
     res.json('Hello World!');
 });
