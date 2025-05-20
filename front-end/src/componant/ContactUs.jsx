@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { data } from "react-router-dom";
 import axios from "axios";
+import { ToastBar, toast } from "react-hot-toast";
 
 const ContactUs = () => {
   const [Data , setData] = useState({
@@ -42,9 +43,11 @@ async function handleSubmit(e) {
   })
 
   if(response.status === 200){
-    alert("Message has been sent successfully") 
+    const message = "Message has been sent successfully" 
+    toast.success(message)
   }else{
-    alert("Message has not been sent ! please try again")
+    const message = "Message has not been sent ! please try again"
+    toast.error(message)
   }
   const data = await response.data
   console.log("data is : ",data)
@@ -117,6 +120,16 @@ async function handleSubmit(e) {
           </motion.button>
         </form>
       </motion.div>
+      <Toaster
+      position="top-center"
+      toastOptions={{
+        style: {
+          background: '#1a1b29',
+          color: '#fff',
+          border: '1px solid #4caf50'
+        }
+      }}
+    />
     </div>
   );
 };

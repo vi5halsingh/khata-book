@@ -4,8 +4,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { Toaster, toast } from 'react-hot-toast';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import { motion } from "framer-motion";
 function Authenticate() {
-
+  const [showLogin, setShowLogin] = useState(true);
     const [response, setResponse] = useState({});
     const [Data, setData] = useState({
       name: "",
@@ -21,6 +22,7 @@ function Authenticate() {
     };
   
     const handleSignup = async (e) => {
+
       e.preventDefault();
       
       try {
@@ -127,8 +129,19 @@ function Authenticate() {
         }
       }}
     />
-      <section className="container mx-auto w-4/5  flex gap-5 justify-center items-center h-[92vh]">
-        <section className="login border-2 rounded-md border-white   w-2/5  h-[70%] ">
+   
+<section className="container mx-auto w-4/5 flex gap-5 justify-center items-center h-[90vh]">
+  {showLogin ? (
+
+   <motion.div 
+  initial={{ opacity: 0, scale: 0.9 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.5 }}
+  className="container mx-auto w-4/5 flex gap-5 justify-center items-center h-[90vh]"
+>
+    <div className="w-full max-w-md">
+      <section className="login border-2 rounded-md border-white p-6">
+     
           <h1 className="text-xl font-bold m-auto w-full  text-center">Log In</h1>
           <form action="" className="1 mx-auto w-5/6">
             <div className="group p-3 raletive">
@@ -157,7 +170,29 @@ function Authenticate() {
             </div>
           </form>
         </section>
-        <section className="signup border-2 rounded-md border-white w-2/5  hover:rotate-0 hover:z-1 ">
+
+        <div className="text-center mt-4">
+          <span className="text-gray-300">Don't have an account? </span>
+          <button 
+            onClick={() => setShowLogin(false)}
+            className="text-[#4caf50] hover:underline"
+            >
+            Sign up here
+          </button>
+        </div>
+
+    </div>
+            </motion.div>
+  ) : (
+      <motion.div 
+  initial={{ opacity: 0, scale: 0.9 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.5 }}
+  className="container mx-auto w-4/5 flex gap-5 justify-center items-center h-[90vh]"
+>
+    <div className="w-full max-w-md">
+      <section className="signup border-2 rounded-md border-white p-6">
+       
           <h1 className="text-xl font-bold m-auto w-full  text-center">Sign Up</h1>
           <form action="" className=" mx-auto w-5/6">
           <div className="group raletive">
@@ -212,7 +247,20 @@ function Authenticate() {
             </div>
           </form>
         </section>
-      </section>
+        {/* Existing signup form content */}
+        <div className="text-center mt-4">
+          <span className="text-gray-300">Already have an account? </span>
+          <button 
+            onClick={() => setShowLogin(true)}
+            className="text-[#4caf50] hover:underline"
+          >
+            Login here
+          </button>
+        </div>
+    </div>
+        </motion.div>
+  )}
+</section>
     </>
   )
 }
