@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { IoCloseCircleOutline}  from "react-icons/io5";
+import { ToastBar , toast } from "react-hot-toast";
  
 function AddNewTransection({ Adding , setAdding}) {
   const [amount, setAmount] = useState("");
@@ -28,7 +29,8 @@ function AddNewTransection({ Adding , setAdding}) {
       const data = await response.json();
       
       if (response.ok) {
-        alert('Transaction added successfully!');
+        const message = 'Transaction added successfully!';
+        toast.success(message)
         // Reset form fields
         setAmount('');
         setDescription('');
@@ -38,11 +40,13 @@ function AddNewTransection({ Adding , setAdding}) {
           window.closeTransactionForm();
         }
       } else {
-        alert(` ${'Failed to add transaction'}`);
+        const message = (` ${'Failed to add transaction'}`);
+        toast.error(message);
       }
     } catch (error) {
       console.error('Error adding transaction:', error);
-      alert('Failed to add transaction. Please try again.');
+      const message = ('Failed to add transaction. Please try again.');
+      toast.error(message);
     }
     
     setAdding((hidden) => !hidden);
