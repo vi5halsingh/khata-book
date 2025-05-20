@@ -58,7 +58,7 @@ function Profile() {
     
     try {
       // This endpoint would need to be implemented on the backend
-      await axios.put("http://localhost:5000/api/users/profile/update", editData, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/users/profile/update`, editData, {
         withCredentials: true,
       });
       
@@ -76,7 +76,7 @@ function Profile() {
   const handleLogout = async () => {
     try {
       // Call the backend logout endpoint to clear the HTTP-only cookie
-      await axios.post("http://localhost:5000/api/users/logout", {}, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/logout`, {}, {
         withCredentials: true
       });
       
