@@ -3,6 +3,7 @@ import { IoPencil, IoShareSocial, IoTrash } from 'react-icons/io5';
 import { FaStar } from 'react-icons/fa';
 import TransactionFilter from './TransactionFilter';
 import TransactionSummary from './TransactionSummary';
+import { Toaster , toast } from 'react-hot-toast';
 
 
 function RecordList(props) {
@@ -49,7 +50,9 @@ function RecordList(props) {
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);
-      setError('Failed to connect to server');
+      const message = 'Failed to connect to server';
+toast(message);
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -64,7 +67,7 @@ function RecordList(props) {
     props.setAdding((p) => p ? false : false);
   };
   
-  // Handle filter changes
+
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
   };
@@ -86,11 +89,14 @@ function RecordList(props) {
           setRecords(records.filter(record => record._id !== id));
         } else {
           const data = await response.json();
-          alert(data.msg || 'Failed to delete transaction');
+       const message =  data.msg || 'Failed to delete transaction';
+       toast(message);
+          
         }
       } catch (error) {
         console.error('Error deleting transaction:', error);
-        alert('Failed to delete transaction');
+        const message = data.msg || 'Failed to delete transaction';
+        toast(message);
       }
     }
   };
@@ -117,11 +123,13 @@ function RecordList(props) {
         ));
       } else {
         const data = await response.json();
-        alert(data.msg || 'Failed to update transaction');
+      const message = data.msg || 'Failed to update transaction'
+              toast(message)
       }
     } catch (error) {
       console.error('Error updating transaction:', error);
-      alert('Failed to update transaction');
+const message = 'Failed to update transaction';
+toast(message)
     }
   };
   
@@ -151,17 +159,31 @@ function RecordList(props) {
           record._id === id ? {...record, description: editedDescription} : record
         ));
         setEditingId(null);
+        const message = 'Transaction updated successfully!';
+        toast(message); 
       } else {
         const data = await response.json();
-        alert(data.msg || 'Failed to update transaction');
+        const message = data.msg || 'Failed to update transaction';
+        toast(message)
       }
     } catch (error) {
       console.error('Error updating transaction:', error);
-      alert('Failed to update transaction');
+      const message = 'Failed to update transaction';
+      toast(message)
     }
   };
   
   return ( <>  
+   <Toaster
+      position="top-center"
+      toastOptions={{
+        style: {
+          background: '#1a1b29',
+          color: '#fff',
+          border: '1px solid #4caf50'
+        }
+      }}
+    />
     <div onClick={() => removetransectionForm()} className="text-white p-5 rounded-lg mx-auto mt-5 shadow-lg backdrop-blur-lg border border-white/20 max-w-4/5 overflow-y-scroll mb-5 h-[80vh] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
       <div className="flex justify-center items-center bg-gray-800 p-3 rounded-md sticky top-0">
         {/* <button className="text-xl">⬅️</button> */}

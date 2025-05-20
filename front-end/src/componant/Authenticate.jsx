@@ -1,10 +1,11 @@
 
 // import './responsive.css';
 import React, { useEffect, useState, useRef } from "react";
-
+import { Toaster, toast } from 'react-hot-toast';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 function Authenticate() {
+
     const [response, setResponse] = useState({});
     const [Data, setData] = useState({
       name: "",
@@ -23,7 +24,7 @@ function Authenticate() {
       e.preventDefault();
       
       try {
-        console.log("Sending data:", Data);
+        
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/register`, {
           method: "POST",
           headers: {
@@ -34,8 +35,9 @@ function Authenticate() {
         
         if (!response.ok) {
           const errorData = await response.json();
-          console.error("Server error:", errorData);
-          alert(`Registration failed: ${errorData.msg || 'Unknown error'}`);
+          // console.error("Server error:", errorData);
+          const message = (`Registration failed: ${errorData.msg || 'Unknown error'}`);
+          toast.error(message);
           return;
         }
         
@@ -47,9 +49,9 @@ function Authenticate() {
         }
         
         // alert("Registration successful!");
+        toast.success("Registration successful!");
         setResponse(data);
-        
-        // Reset form with proper structure
+
         setData({
           name: "",
           email: "",
@@ -59,6 +61,8 @@ function Authenticate() {
         });
       } catch (error) {
         console.error("Registration error:", error);
+        const message = error.response?.data?.msg || 'Registration failed'
+        toast.error(message)
       }
     };
     
@@ -67,7 +71,7 @@ function Authenticate() {
       e.preventDefault();
       
       try {
-        // Create login data object with correct field names
+   
         const loginData = {
           mobileNo: Data.mobileNo,
           password: Data.password
@@ -79,16 +83,12 @@ function Authenticate() {
       withCredentials:true,
      })
         const data = await response.data;
-        // In login handler after successful response
+
         if (data.token) {
-        // Store token in both cookie and localStorage for redundancy
+ 
         document.cookie = `authToken=${data.token}; path=/; max-age=86400; SameSite=None; Secure`;
         localStorage.setItem('authToken', data.token);
-        }
-        
-        // alert("Login successful!");
-
-    
+        }    
         if (data.user) {
           localStorage.setItem('userData', JSON.stringify(data.user));
         }
@@ -103,6 +103,8 @@ function Authenticate() {
         
       } catch (error) {
         console.error("Login error:", error);
+        const message = error.response?.data?.msg || 'Login failed'
+        toast.error(message)
       }
     };
 
@@ -115,6 +117,16 @@ function Authenticate() {
 
   return (
     <>
+     <Toaster
+      position="top-center"
+      toastOptions={{
+        style: {
+          background: '#1a1b29',
+          color: '#fff',
+          border: '1px solid #4caf50'
+        }
+      }}
+    />
       <section className="container mx-auto w-4/5  flex gap-5 justify-center items-center h-[92vh]">
         <section className="login border-2 rounded-md border-white   w-2/5  h-[70%] ">
           <h1 className="text-xl font-bold m-auto w-full  text-center">Log In</h1>

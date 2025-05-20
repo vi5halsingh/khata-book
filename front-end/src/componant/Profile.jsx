@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBackOutline } from "react-icons/io5";
+import { Toaster, toast } from 'react-hot-toast';
 
 function Profile() {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ function Profile() {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/users/profile`, {
           withCredentials: true,
+          headers:{
+            'authorization':`Bearer ${localStorage.getItem('authToken')}`
+          }
         });
        
         setUserData(response.data);
@@ -61,9 +65,11 @@ function Profile() {
       setUserData(editData);
       setIsEditing(false);
       alert("Profile updated successfully!");
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
+    }catch (error) {
+      console.error("Error fetching profile:", error);
+      const message = error.response?.data?.msg || "Failed to load profile. Please login again.";
+      toast.error(message);
+      if (error.response?.status === 401) navigate('/');
     }
   };
 
@@ -79,9 +85,11 @@ function Profile() {
       
       // Redirect to home/login page
       navigate('/');
-    } catch (error) {
-      console.error("Logout error:", error);
-      alert("Failed to logout. Please try again.");
+    }
+    catch (error) {
+      console.error("Error updating profile:", error);
+      const message = error.response?.data?.msg || "Failed to Logout . Please try again.";
+      toast.error(message);
     }
   };
 
@@ -102,7 +110,18 @@ function Profile() {
   }
 
   return (
+    
     <section className="mt-3 container mx-auto my-auto h-full w-4/5 flex justify-center items-center">
+        <Toaster
+      position="top-center"
+      toastOptions={{
+        style: {
+          background: '#1a1b29',
+          color: '#fff',
+          border: '1px solid #4caf50'
+        }
+      }}
+    />
       <div className="profile-container border-2 rounded-md border-white w-2/5 p-6 shadow-lg">
         <div className="flex justify-between items-center mb-6">
           <button 
@@ -160,12 +179,12 @@ function Profile() {
                 name="category"
                 value={editData.category || ""}
                 onChange={handleEditChange}
-                className="appearance-none border-b-3 border-[#4caf50] w-full py-2 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium"
+                className="appearance-none border-b-3 border-[#4caf50] w-full py-2 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium bg-transparent"
               >
-                <option value="not selected">Select</option>
-                <option value="general">General</option>
-                <option value="obc">OBC</option>
-                <option value="sc/st">SC/ST</option>
+                <option value="not selected " className='text-black'>Select</option>
+                <option value="general" className='text-black'>General</option>
+                <option value="obc" className='text-black'>OBC</option>
+                <option value="sc/st" className='text-black'>SC/ST</option>
               </select>
             </div>
             

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+const {toast , Toaster} = require('react-hot-toast');
 
 function TransactionSummary() {
   const [summary, setSummary] = useState({
@@ -43,9 +44,8 @@ function TransactionSummary() {
       if (response.ok) {
         setSummary(data.data);
       } else {
-        alert('you might not be logged in')
-        // return <Navigate to="/" />;
-        // setError('You might not be logged in');
+        const message = 'you might not be logged in'    
+         toast.error(message);
       }
     } catch (error) {
       console.error('Error fetching summary:', error);
@@ -71,6 +71,17 @@ function TransactionSummary() {
 
   return (
     <div className="bg-gray-900 text-white p-5 rounded-lg shadow-lg border border-gray-700 mb-6">
+
+<Toaster
+      position="top-center"
+      toastOptions={{
+        style: {
+          background: '#1a1b29',
+          color: '#fff',
+          border: '1px solid #4caf50'
+        }
+      }}
+    />
       <h2 className="text-xl font-bold mb-4">Financial Summary</h2>
       
       {/* Date filter controls */}
