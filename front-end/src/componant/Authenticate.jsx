@@ -79,8 +79,11 @@ function Authenticate() {
       withCredentials:true,
      })
         const data = await response.data;
+        // In login handler after successful response
         if (data.token) {
-          document.cookie = `authToken=${data.token}; path=/; max-age=86400`; // 24 hours
+        // Store token in both cookie and localStorage for redundancy
+        document.cookie = `authToken=${data.token}; path=/; max-age=86400; SameSite=None; Secure`;
+        localStorage.setItem('authToken', data.token);
         }
         
         // alert("Login successful!");

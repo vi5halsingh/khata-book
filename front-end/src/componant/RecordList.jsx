@@ -32,7 +32,7 @@ function RecordList(props) {
       
       const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
       
-      const response = await fetch(`http://localhost:5000/api/transactions${queryString}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/transactions${queryString}`, {
         method: 'GET',
         headers: {
           'Authorization': localStorage.getItem('authToken')
@@ -73,7 +73,7 @@ function RecordList(props) {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this transaction?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/transactions/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/transactions/${id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': localStorage.getItem('authToken')
@@ -133,7 +133,7 @@ function RecordList(props) {
   
   const saveEdit = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/transactions/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/transactions/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -12,12 +12,17 @@ app.use(Express.json())
 app.use(cookieParser())
 
 
+// Update CORS configuration
 app.use(cors({
-  origin: ['http://localhost:5173','https://khata-book-lime.vercel.app/', 'http://[::1]:5173'],
+  origin: [
+    'http://localhost:5173', 
+    'https://khata-book-lime.vercel.app', // Add production frontend URL
+    'https://khata-book-cwv0.onrender.com' // Allow backend-to-backend calls
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}))
+}));
 
 const connectDB = require('./config/db')
 
