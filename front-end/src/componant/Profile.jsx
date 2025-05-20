@@ -60,11 +60,16 @@ function Profile() {
       // This endpoint would need to be implemented on the backend
       await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/users/profile/update`, editData, {
         withCredentials: true,
+         headers:{
+          'authorization':` Bearer ${localStorage.getItem('authToken')
+         }`
+        }
       });
       
       setUserData(editData);
       setIsEditing(false);
-      alert("Profile updated successfully!");
+      const message = "Profile updated successfully!";
+      toast.success(message)
     }catch (error) {
       console.error("Error fetching profile:", error);
       const message = error.response?.data?.msg || "Failed to load profile. Please login again.";
@@ -77,13 +82,13 @@ function Profile() {
     try {
       // Call the backend logout endpoint to clear the HTTP-only cookie
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/logout`, {}, {
-        withCredentials: true
+        withCredentials: true,
+        headers:{
+          'authorization':` Bearer ${localStorage.getItem('authToken')
+         }`
+        }
       });
-      
-      // Also clear any client-side storage
       localStorage.removeItem('authToken');
-      
-      // Redirect to home/login page
       navigate('/');
     }
     catch (error) {
