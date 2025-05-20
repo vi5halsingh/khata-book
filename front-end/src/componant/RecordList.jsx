@@ -3,7 +3,7 @@ import { IoPencil, IoShareSocial, IoTrash } from 'react-icons/io5';
 import { FaStar } from 'react-icons/fa';
 import TransactionFilter from './TransactionFilter';
 import TransactionSummary from './TransactionSummary';
-import { Toaster , toast } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 
 
 function RecordList(props) {

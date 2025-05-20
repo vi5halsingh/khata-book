@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-const {toast , Toaster} = require('react-hot-toast');
+import {toast , Toaster}  from 'react-hot-toast';
 
 function TransactionSummary() {
   const [summary, setSummary] = useState({
@@ -72,7 +72,7 @@ function TransactionSummary() {
   return (
     <div className="bg-gray-900 text-white p-5 rounded-lg shadow-lg border border-gray-700 mb-6">
 
-<Toaster
+{/* <Toaster
       position="top-center"
       toastOptions={{
         style: {
@@ -81,7 +81,7 @@ function TransactionSummary() {
           border: '1px solid #4caf50'
         }
       }}
-    />
+    /> */}
       <h2 className="text-xl font-bold mb-4">Financial Summary</h2>
       
       {/* Date filter controls */}
