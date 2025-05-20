@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { data } from "react-router-dom";
 import axios from "axios";
-import { ToastBar, toast } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 
 const ContactUs = () => {
   const [Data , setData] = useState({

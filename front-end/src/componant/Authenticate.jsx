@@ -1,275 +1,197 @@
 
-// import './responsive.css';
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Toaster, toast } from 'react-hot-toast';
-import axios from 'axios'
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
+
 function Authenticate() {
-  const [showLogin, setShowLogin] = useState(true);
-    const [response, setResponse] = useState({});
-    const [Data, setData] = useState({
-      name: "",
-      email: "",
-      mobileNo: "",
-      password: "",
-      category: ""
-    });
-    const handleChange = (e) => {
-      const name = e.target.name;
-      const value = e.target.value;
-      setData((values) => ({ ...values, [name]: value }));
-    };
-  
-    const handleSignup = async (e) => {
-
-      e.preventDefault();
-      
-      try {
-        
-        if (!Data.name || !Data.email || !Data.mobileNo || !Data.password || !Data.category) {
-          toast.error("Please fill all the fields")
-          return
-        }
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(Data)
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          // console.error("Server error:", errorData);
-          const message = (`Registration failed: ${errorData.msg || 'Unknown error'}`);
-          toast.error(message);
-          return;
-        }
-        
-        const data = await response.json();
-        
-        // Save token if provided in the response
-        if (data.token) {
-          localStorage.setItem('authToken', data.token);
-        }
-        
-        // alert("Registration successful!");
-        toast.success("Registration successful!");
-        setResponse(data);
-
-        setData({
-          name: "",
-          email: "",
-          mobileNo: "",
-          password: "",
-          category: ""
-        });
-      } catch (error) {
-        console.error("Registration error:", error);
-        const message = error.response?.data?.msg || 'Registration failed'
-        toast.error(message)
-      }
-    };
-    
-    const navigate = useNavigate();
-    const handleLogin = async (e) => {
-      e.preventDefault();
-      
-      try {
-   
-        const loginData = {
-          mobileNo: Data.mobileNo,
-          password: Data.password
-        };
-        if(!loginData.mobileNo || !loginData.password){
-          toast.error("Please fill all the fields")
-          return 
-        }
-        // console.log("Sending login data:", loginData);
-        
-     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/login`, loginData,{
-      withCredentials:true,
-     })
-        const data = await response.data;
-
-        if (data.token) {
  
-        document.cookie = `authToken=${data.token}; path=/; max-age=86400; SameSite=None; Secure`;
-        localStorage.setItem('authToken', data.token);
-        }    
-        if (data.user) {
-          localStorage.setItem('userData', JSON.stringify(data.user));
-        }
+  const [showLogin, setShowLogin] = useState(true);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    mobileNo: "",
+    password: "",
+    category: ""
+  });
+  const navigate = useNavigate();
+  const mobileInputRef = useRef();
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-        navigate('/see-record');
-      
-        setData({
-          ...Data,
-          password: ""
-        });
-        
-      } catch (error) {
-        console.error("Login error:", error);
-        const message = error.response?.data?.msg || 'Login failed'
-        toast.error(message)
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      if (!Object.values(formData).every(field => field.trim())) {
+        toast.error("Please fill all fields");
+        return;
       }
-    };
 
-    const mobilelInput = useRef()
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/register`,
+        formData
+      );
 
-    const focusInput = () => {
-      mobilelInput.current.focus();
-        
+      if (response.data.token) {
+        localStorage.setItem('authToken', response.data.token);
+        toast.success("Registration successful!");
+        setFormData({ name: "", email: "", mobileNo: "", password: "", category: "" });
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.msg || 'Registration failed');
     }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/login`,
+        { mobileNo: formData.mobileNo, password: formData.password },
+        { withCredentials: true }
+      );
+
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
+        document.cookie = `authToken=${data.token}; path=/; max-age=86400; SameSite=None; Secure`;
+        navigate('/see-record');
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.msg || 'Login failed');
+    }
+  };
 
   return (
-    <>
-     <Toaster
-      position="top-center"
-      toastOptions={{
-        style: {
-          background: '#1a1b29',
-          color: '#fff',
-          border: '1px solid #4caf50'
-        }
-      }}
-    />
-   
-<section className="container mx-auto w-4/5 flex gap-5 justify-center items-center h-[90vh]">
-  {showLogin ? (
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-oklch(0.558 0.288 302.321) to-oklch(0.623 0.214 259.815)">
+      <Toaster position="top-center" toastOptions={{
+        style: { background: '#1a1b29', color: '#fff', border: '1px solid #4caf50' }
+      }} />
 
-   <motion.div 
-  initial={{ opacity: 0, scale: 0.9 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.5 }}
-  className="container mx-auto w-4/5 flex gap-5 justify-center items-center h-[90vh]"
->
-    <div className="w-full max-w-md">
-      <section className="login border-2 rounded-md border-white p-6">
-     
-          <h1 className="text-xl font-bold m-auto w-full  text-center">Log In</h1>
-          <form action="" className="1 mx-auto w-5/6">
-            <div className="group p-3 raletive">
-              <label htmlFor="mobile"
-                onClick={focusInput}
-                className="w-full font-medium text-lg mb-2">Mobile Number</label>
-              <input type="phone" id="mobile"
-                name="mobileNo"
-                value={Data.mobileNo || ""}
-                onChange={handleChange}
-                ref={mobilelInput}
-                require
-                className=" appearance-none border-b-3 border-[#4caf50] w-full py-2 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium" />
-            </div>
-            
-            <div className="group p-3">
-              <label htmlFor="password"
-                className="w-full font-medium text-lg mb-2">Password</label>
-              <input type="password"
-                name="password"
-                value={Data.password}
-                onChange={handleChange}
-                id="passwor  d" className="appearance-none border-b-3 border-[#4caf50] w-full py-2 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium " />
-            </div>
-            <div className="group p-3">
-              <button type="submit"  onClick={handleLogin} className="border-3 border-[#4caf50] p-2 text-lg font-medium mx-auto text-center w-full hover:bg-[#4caf50] cursor-pointer rounded-full">Enter</button>
-            </div>
-          </form>
-        </section>
-
-        <div className="text-center mt-4">
-          <span className="text-gray-300">Don't have an account? </span>
-          <button 
-            onClick={() => setShowLogin(false)}
-            className="text-[#4caf50] hover:underline"
-            >
-            Sign up here
-          </button>
-        </div>
-
-    </div>
-            </motion.div>
-  ) : (
-      <motion.div 
-  initial={{ opacity: 0, scale: 0.9 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.5 }}
-  className="container mx-auto w-4/5 flex gap-5 justify-center items-center h-[90vh]"
->
-    <div className="w-full max-w-md">
-      <section className="signup border-2 rounded-md border-white p-6">
-       
-          <h1 className="text-xl font-bold m-auto w-full  text-center">Sign Up</h1>
-          <form action="" className=" mx-auto w-5/6">
-          <div className="group raletive">
-              <label htmlFor="name" className="w-full font-medium text-lg ">Full Name</label>
-              <input type="name"
-                name="name"
-                value={Data.name}
-                onChange={handleChange}
-                id="name" className=" appearance-none border-b-3 border-[#4caf50] w-full py-1 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium  " />
-            </div>
-            <div className="group raletive">
-              <label htmlFor="email" className="w-full font-medium text-lg ">Email Id</label>
-              <input type="email"
-                name="email"
-                value={Data.email}
-                onChange={handleChange}
-                id="email" className=" appearance-none border-b-3 border-[#4caf50] w-full py-1 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium  " />
-            </div>
-            <div className="group raletive">
-              <label htmlFor="mobileNo" className="w-full font-medium text-lg">Mobile Number</label>
-              <input type="phone"
-                name="mobileNo"
-                value={Data.mobileNo || ""}
-                onChange={handleChange}
-                id="mobileNo"
-                className=" appearance-none border-b-3 border-[#4caf50] w-full py-2 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium  " />
-            </div>
-            <div className="group raletive">
-              <label htmlFor="passwd" className="w-full font-medium text-lg mb-2">Password</label>
-              <input type="password"
-                name="password"
-                value={Data.password || ""}
-                onChange={handleChange}
-                id="passwd"
-                className="appearance-none border-b-3 border-[#4caf50] w-full py-2 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium " />
-            </div>
-            <div className="group raletive">
-              <label htmlFor="text" className="w-full font-medium text-lg mb-2">Category</label>
-              <select
-                name="category"
-                value={Data.category}
-                onChange={handleChange}>
-                  className="appearance-none border-b-3 border-[#4caf50] w-full py-2 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium "
-                <option >select</option>
-                <option value="general">General</option>
-                <option value="obc" >OBC</option>
-                <option value="sc/st">SC/ST</option>
-              </select>
-            </div>
-            <div className="group p-3">
-              <button type="submit" className="border-3 border-[#4caf50] p-2 text-lg font-medium mx-auto text-center w-full hover:bg-[#4caf50] cursor-pointer rounded-full" onClick={handleSignup}>create account</button>
-            </div>
-          </form>
-        </section>
-        {/* Existing signup form content */}
-        <div className="text-center mt-4">
-          <span className="text-gray-300">Already have an account? </span>
-          <button 
-            onClick={() => setShowLogin(true)}
-            className="text-[#4caf50] hover:underline"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="w-full max-w-md"
+      >
+        {showLogin ? (
+          <motion.div
+            key="login"
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/20"
           >
-            Login here
-          </button>
-        </div>
+            <h1 className="text-2xl font-bold text-center mb-6 text-[#4caf50]">Log In</h1>
+            <form className="space-y-4" onSubmit={handleLogin}>
+              <div>
+                <label className="block text-gray-300 mb-2">Mobile Number</label>
+                <input
+                  type="tel"
+                  name="mobileNo"
+                  ref={mobileInputRef}
+                  value={formData.mobileNo}
+                  onChange={handleChange}
+                  className="w-full bg-white/10 text-white rounded-lg p-3 focus:ring-2 focus:ring-[#4caf50] outline-none"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full bg-white/10 text-white rounded-lg p-3 focus:ring-2 focus:ring-[#4caf50] outline-none"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#4caf50] text-white py-3 rounded-lg hover:bg-[#3d8b40] transition-colors"
+              >
+                Sign In
+              </button>
+            </form>
+
+            <p className="text-center mt-4 text-gray-300">
+              Don't have an account? {' '}
+              <button
+                onClick={() => setShowLogin(false)}
+                className="text-[#4caf50] hover:underline"
+              >
+                Sign Up
+              </button>
+            </p>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="signup"
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/20"
+          >
+            <h1 className="text-2xl font-bold text-center mb-6 text-[#4caf50]">Sign Up</h1>
+            <form className="space-y-4" onSubmit={handleSignup}>
+              {['name', 'email', 'mobileNo', 'password'].map((field) => (
+                <div key={field}>
+                  <label className="block text-gray-300 mb-2 capitalize">
+                    {field.replace(/([A-Z])/g, ' $1')}
+                  </label>
+                  <input
+                    type={field === 'password' ? 'password' : 'text'}
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    className="w-full bg-white/10 text-white rounded-lg p-3 focus:ring-2 focus:ring-[#4caf50] outline-none"
+                    required
+                  />
+                </div>
+              ))}
+
+              <div>
+                <label className="block text-gray-300 mb-2">Category</label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className="w-full bg-white/10 text-white rounded-lg p-3 focus:ring-2 focus:ring-[#4caf50] outline-none"
+                  required
+                >
+                  <option value="">Select Category</option>
+                  <option value="general">General</option>
+                  <option value="obc">OBC</option>
+                  <option value="sc/st">SC/ST</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#4caf50] text-white py-3 rounded-lg hover:bg-[#3d8b40] transition-colors"
+              >
+                Create Account
+              </button>
+            </form>
+
+            <p className="text-center mt-4 text-gray-300">
+              Already have an account? {' '}
+              <button
+                onClick={() => setShowLogin(true)}
+                className="text-[#4caf50] hover:underline"
+              >
+                Login
+              </button>
+            </p>
+          </motion.div>
+        )}
+      </motion.div>
     </div>
-        </motion.div>
-  )}
-</section>
-    </>
-  )
+  );
 }
+
 export default Authenticate;
