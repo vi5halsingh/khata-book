@@ -27,6 +27,10 @@ function Authenticate() {
       
       try {
         
+        if (!Data.name || !Data.email || !Data.mobileNo || !Data.password || !Data.category) {
+          toast.error("Please fill all the fields")
+          return
+        }
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/register`, {
           method: "POST",
           headers: {
@@ -78,7 +82,10 @@ function Authenticate() {
           mobileNo: Data.mobileNo,
           password: Data.password
         };
-        
+        if(!loginData.mobileNo || !loginData.password){
+          toast.error("Please fill all the fields")
+          return 
+        }
         // console.log("Sending login data:", loginData);
         
      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/login`, loginData,{
@@ -153,6 +160,7 @@ function Authenticate() {
                 value={Data.mobileNo || ""}
                 onChange={handleChange}
                 ref={mobilelInput}
+                require
                 className=" appearance-none border-b-3 border-[#4caf50] w-full py-2 px-3 focus:outline-2 focus:border-3 focus:rounded focus:shadow-outline outline-none text-sm font-medium" />
             </div>
             

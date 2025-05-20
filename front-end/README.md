@@ -31,4 +31,9 @@ If you are developing a production application, we recommend using TypeScript an
 - React Router v6
 - Framer Motion animations
 
-## Project Structure
+### Frontend Updates :
+- Added error boundaries and toast notifications
+- Improved authentication flow with secure cookie storage
+- Responsive form handling with error states
+- Animated page transitions using Framer Motion
+
