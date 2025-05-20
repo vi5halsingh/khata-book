@@ -44,7 +44,7 @@ function TransactionSummary() {
       if (response.ok) {
         setSummary(data.data);
       } else {
-        const message = 'you might not be logged in'    
+        const message = 'you may not be logged in'    
          toast.error(message);
       }
     } catch (error) {
