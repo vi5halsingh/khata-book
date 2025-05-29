@@ -66,7 +66,7 @@ function Authenticate() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-oklch(0.558 0.288 302.321) to-oklch(0.623 0.214 259.815)">
+    <div className="h-[50%] flex items-center justify-center p-4 bg-gradient-to-br from-oklch(0.558 0.288 302.321) to-oklch(0.623 0.214 259.815)">
       <Toaster position="top-center" toastOptions={{
         style: { background: '#1a1b29', color: '#fff', border: '1px solid #4caf50' }
       }} />
