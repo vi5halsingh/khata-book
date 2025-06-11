@@ -126,9 +126,9 @@ function Profile() {
                   onChange={handleEditChange}
                   className="w-full bg-white/10 text-white rounded-lg p-2 md:p-3 focus:ring-2 focus:ring-[#4caf50] outline-none"
                 >
-                  <option value="general">General</option>
-                  <option value="obc">OBC</option>
-                  <option value="sc/st">SC/ST</option>
+                  <option value="general" className="bg-[#6e86ff]" >General</option>
+                  <option value="obc" className="bg-[#6e86ff]" >OBC</option>
+                  <option value="sc/st" className="bg-[#6e86ff]" >SC/ST</option>
                 </select>
               </div>
 

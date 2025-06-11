@@ -38,8 +38,8 @@ function Authenticate() {
 
       if (response.data.token) {
         localStorage.setItem('authToken', response.data.token);
-        toast.success("Registration successful!");
         setFormData({ name: "", email: "", mobileNo: "", password: "", category: "" });
+        toast.success("Registration successful");
       }
     } catch (error) {
       toast.error(error.response?.data?.msg || 'Registration failed');
@@ -66,7 +66,7 @@ function Authenticate() {
   };
 
   return (
-    <div className="h-[50%] flex items-center justify-center p-4 bg-gradient-to-br from-oklch(0.558 0.288 302.321) to-oklch(0.623 0.214 259.815)">
+    <div className="min-h-screen flex items-start justify-center px-4 py-8 bg-gradient-to-br from-oklch(0.558 0.288 302.321) to-oklch(0.623 0.214 259.815 ) ">
       <Toaster position="top-center" toastOptions={{
         style: { background: '#1a1b29', color: '#fff', border: '1px solid #4caf50' }
       }} />
@@ -75,7 +75,7 @@ function Authenticate() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="w-full max-w-md"
+        className="w-full max-w-1/2"
       >
         {showLogin ? (
           <motion.div
@@ -134,11 +134,11 @@ function Authenticate() {
             key="signup"
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
-            className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/20"
+            className="bg-white/5 backdrop-blur-lg rounded-2xl p-5  overflow-y-auto h-[80vh] w-full border  border-white/20 "
           >
             <h1 className="text-2xl font-bold text-center mb-6 text-[#4caf50]">Sign Up</h1>
             <form className="space-y-4" onSubmit={handleSignup}>
-              {['name', 'email', 'mobileNo', 'password'].map((field) => (
+              {['name', 'email', 'mobileNo', 'password' ,'category'].map((field) => (
                 <div key={field}>
                   <label className="block text-gray-300 mb-2 capitalize">
                     {field.replace(/([A-Z])/g, ' $1')}
@@ -163,10 +163,10 @@ function Authenticate() {
                   className="w-full bg-white/10 text-white rounded-lg p-3 focus:ring-2 focus:ring-[#4caf50] outline-none"
                   required
                 >
-                  <option value="">Select Category</option>
-                  <option value="general">General</option>
-                  <option value="obc">OBC</option>
-                  <option value="sc/st">SC/ST</option>
+                  <option value="" className="bg-[#6e86ff]">Select Category</option>
+                  <option value="general" className="bg-[#6e86ff] font-medium">General</option>
+                  <option value="obc" className="bg-[#6e86ff] font-medium">OBC</option>
+                  <option value="sc/st" className="bg-[#6e86ff] font-medium">SC/ST</option>
                 </select>
               </div>
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IoCloseCircleOutline}  from "react-icons/io5";
 import { ToastBar , toast } from "react-hot-toast";
  
-function AddNewTransection({ Adding , setAdding}) {
+function AddNewTransection({ Adding , setAdding, setTransactionChanged }) {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
     const [type, setType] = useState("income");
@@ -39,6 +39,7 @@ function AddNewTransection({ Adding , setAdding}) {
         if (window.location.pathname === '/see-record' && window.closeTransactionForm) {
           window.closeTransactionForm();
         }
+        if (setTransactionChanged) setTransactionChanged(prev => !prev);
       } else {
         const message = (` ${'Failed to add transaction'}`);
         toast.error(message);

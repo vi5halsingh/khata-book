@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import {toast , Toaster}  from 'react-hot-toast';
 
-function TransactionSummary() {
+function TransactionSummary({transactionChanged}) {
   const [summary, setSummary] = useState({
     income: 0,
     expense: 0,
@@ -58,8 +58,8 @@ function TransactionSummary() {
   // Load summary when component mounts or date range changes
   useEffect(() => {
     fetchSummary();
-  }, [dateRange.startDate, dateRange.endDate]);
-
+  }, [dateRange.startDate, dateRange.endDate, typeof transactionChanged !== 'undefined' ? transactionChanged : null]);
+ 
   // Handle date range changes
   const handleDateChange = (e) => {
     const { name, value } = e.target;
@@ -70,7 +70,7 @@ function TransactionSummary() {
   };
 
   return (
-    <div className="bg-gray-900 text-white p-5 rounded-lg shadow-lg border border-gray-700 mb-6">
+    <div className="bg-gray-900 text-white p-5 rounded-lg shadow-lg border border-gray-700 mb-6 ">
 
 {/* <Toaster
       position="top-center"

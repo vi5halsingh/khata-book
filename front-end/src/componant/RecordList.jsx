@@ -61,7 +61,7 @@ toast(message);
 
   useEffect(() => {
     fetchTransactions();
-  }, [filters, props.Adding]); 
+  }, [filters, props.Adding, props.transactionChanged]); 
 
   const removetransectionForm = () => {
     props.setAdding((p) => p ? false : false);
@@ -87,6 +87,8 @@ toast(message);
         if (response.ok) {
           // Remove from local state
           setRecords(records.filter(record => record._id !== id));
+          toast.success('Transaction deleted successfully!');
+          props.setTransactionChanged((p) => p? false : true);
         } else {
           const data = await response.json();
        const message =  data.msg || 'Failed to delete transaction';
@@ -192,7 +194,7 @@ toast(message)
       </div>
       
   
-      <TransactionSummary />
+      <TransactionSummary transactionChanged={props.transactionChanged} />
    
       <TransactionFilter onFilterChange={handleFilterChange} />
       
