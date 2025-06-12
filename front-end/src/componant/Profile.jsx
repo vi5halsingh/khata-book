@@ -51,7 +51,10 @@ function Profile() {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/logout`,{}, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/logout`, {}, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
         withCredentials: true
       });
       localStorage.removeItem('authToken');
