@@ -13,15 +13,17 @@ import Profile from './componant/Profile'
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="say-something" element={<SaySomething />} />
-          <Route path="notification" element={<Notification />} />
-        </Route>
-        <Route path="/see-record" element={<SeeRecord />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
+      <div className="min-h-screen flex flex-col">
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="say-something" element={<SaySomething />} />
+            <Route path="notification" element={<Notification />} />
+          </Route>
+          <Route path="/see-record" element={<SeeRecord />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   )
 }

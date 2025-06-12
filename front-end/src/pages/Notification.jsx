@@ -10,13 +10,9 @@ const Notification = () => {
 
   const fetchNotifications = async () => {
     try {
-      setNotifications([
-        "New message from John Doe",
-        "You have a new order",
-        "New message from John Doe",
-        "You have a new order",
-        "New message from John Doe",
-        "You have a new order",
+      setNotifications([       
+        "Visit with full of yours patience and enjoy it",
+        "It is appreciated to share your experience with us ",
       ]);
     } catch (error) {
       console.error('Error fetching notifications:', error);

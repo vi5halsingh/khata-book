@@ -22,53 +22,50 @@ const ContactUs = () => {
 
 
 async function handleSubmit(e) {
-  e.preventDefault()
+  e.preventDefault();
   const newData = {
-    name:Data.name,
-    email:Data.email,
-    mobile:Data.mobile,
-    message:Data.message
-  }
-  console.log("new data is : ",Data)
+    name: Data.name,
+    email: Data.email,
+    mobile: Data.mobile,
+    message: Data.message
+  };
   
-  const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/contact`,newData, {
-    withCredentials:true,
-    headers: {
-       Authorization: localStorage.getItem("authToken"),
-    },
-  }).then((res)=>{  
-    console.log(res)
-  }).catch((err)=>{
-    console.log(err)
-  })
-  console.log(response)
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/api/users/contact`,
+      newData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+        withCredentials: true,
+      }
+    );
+    console.log(response)
 
-  if(response.status === 200){
-    const message = "Message has been sent successfully" 
-    toast.success(message)
-  }else{
-    const message = "Message has not been sent ! please try again"
-    toast.error(message)
+    if (response.status === 200) {
+      toast.success("Message has been sent successfully");
+      // Reset form after successful submission
+      setData({
+        name: "",
+        email: "",
+        mobile: "",
+        message: ""
+      });
+    }
+  } catch (error) {
+    console.error("Error sending message:", error);
+    toast.error(error.response?.data?.msg || "Message has not been sent! Please try again");
   }
-  const data = await response.data
-  console.log("data is : ",data)
-
-
-  setData({
-    name:"",
-    email:"",
-    mobile:"",
-    message:""
-  })
 }
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <div className="flex justify-center items-start mt-10 min-h-screen p-4 ">
       <motion.div 
         initial={{ opacity: 0, scale: 0.8 }} 
         animate={{ opacity: 1, scale: 1 }} 
        
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="backdrop-blur-lg bg-white/10 p-8 rounded-2xl shadow-lg border border-white/20 w-full max-w-lg"
+        className="backdrop-blur-lg bg-white/10 p-5 rounded-2xl shadow-lg border border-white/10 w-full max-w-lg "
       >
         <h1 className="text-3xl font-semibold text-white text-center mb-6">
           Contact Us
