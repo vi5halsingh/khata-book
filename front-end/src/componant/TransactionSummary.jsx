@@ -113,16 +113,16 @@ function TransactionSummary({transactionChanged}) {
       ) : error ? (
         <div className="text-center p-3 text-red-500">{error}</div>
       ) : (
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-green-900 p-4 rounded-lg text-center">
+        <div className="md:grid grid-cols-3 gap-4 ">
+          <div className="bg-green-900 p-4 rounded-lg text-center mt-2">
             <h3 className="text-sm text-gray-300 mb-1">Income</h3>
             <p className="text-2xl font-bold text-green-400">₹ {summary.income.toLocaleString()}</p>
           </div>
-          <div className="bg-red-900 p-4 rounded-lg text-center">
+          <div className="bg-red-900 p-4 rounded-lg text-center  mt-2">
             <h3 className="text-sm text-gray-300 mb-1">Expense</h3>
             <p className="text-2xl font-bold text-red-400">₹ {summary.expense.toLocaleString()}</p>
           </div>
-          <div className="bg-blue-900 p-4 rounded-lg text-center">
+          <div className="bg-blue-900 p-4 rounded-lg text-center  mt-2">
             <h3 className="text-sm text-gray-300 mb-1">Balance</h3>
             <p className={`text-2xl font-bold ${summary.balance >= 0 ? 'text-green-400' : 'text-red-400'}`}>
               ₹ {summary.balance.toLocaleString()}

@@ -186,7 +186,7 @@ toast(message)
         }
       }}
     />
-    <div onClick={() => removetransectionForm()} className="text-white p-5 rounded-lg mx-auto mt-5 shadow-lg backdrop-blur-lg border border-white/20 max-w-4/5 overflow-y-scroll mb-5 h-[80vh] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
+    <div onClick={() => removetransectionForm()} className="text-white md:p-5 rounded-lg md:mx-auto mt-5 shadow-lg backdrop-blur-lg border border-white/20 md:max-w-4/5 overflow-y-scroll mb-5 h-[80vh] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
       <div className="flex justify-center items-center bg-gray-800 p-3 rounded-md sticky top-0">
         {/* <button className="text-xl">⬅️</button> */}
         <h2 className="text-xl font-bold">Transactions</h2>
@@ -208,7 +208,7 @@ toast(message)
         records.map((record) => (
           <div
             key={record._id}
-            className="flex items-center justify-between p-3 my-3 rounded-md shadow-md border border-gray-700"
+            className="md:flex items-center justify-between p-3 my-3 rounded-md shadow-md border border-gray-700"
             style={{ backgroundColor: record.type === "income" ? "#1e4620" : "#641e1e" }}
           >
             <span className="text-white font-bold p-2 rounded-md" style={{ backgroundColor: record.type === "income" ? "#4caf50" : "#d32f2f" }}>
@@ -225,7 +225,7 @@ toast(message)
               />
             ) : (
               <div 
-                className="bg-transparent p-2 w-3/5 text-white overflow-hidden text-ellipsis"
+                className="bg-transparent p-2 md:w-3/5 text-white overflow-hidden text-ellipsis"
                 onClick={() => startEditing(record._id, record.description)}
               >
                 {record.description}

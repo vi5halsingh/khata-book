@@ -91,7 +91,12 @@ res.cookie('authToken', token, {
     logout: async (req, res) => {
         try {
             // Clear the auth cookie
-            res.clearCookie('authToken');
+            res.clearCookie('authToken',{
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                path: '/',
+            });
             
             res.json({ msg: 'Logged out successfully' });
         } catch (error) {
@@ -100,14 +105,5 @@ res.cookie('authToken', token, {
         }
     },
 
-    // contact: async (req, res) => {
-    //     try {
-    //        const { name , email, mobileNo, message}  = req.body;
-           
-    //     } catch (error) {
-    //         console.error('Contact error:', error);
-    //         return res.status(500).json({ msg: error.message });
-    //       }
-    // },
 }
 module.exports = UserController;

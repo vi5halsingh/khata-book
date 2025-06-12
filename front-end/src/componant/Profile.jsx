@@ -51,7 +51,7 @@ function Profile() {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/logout`, {}, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/logout`,{}, {
         withCredentials: true
       });
       localStorage.removeItem('authToken');
@@ -77,7 +77,7 @@ function Profile() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen p-4 md:p-6"
+      className="min-h-screen p-2 md:p-6"
     >
       <Toaster position="top-center" toastOptions={{
         style: { background: '#1a1b29', color: '#fff', border: '1px solid #4caf50' }
@@ -149,7 +149,7 @@ function Profile() {
               </div>
             </form>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4  overflow-x-hidden md:overflow-x-auto">
               <div className="flex flex-col items-center mb-6">
                 <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#4caf50] flex items-center justify-center text-white text-2xl md:text-3xl font-bold">
                   {userData.name.charAt(0).toUpperCase()}

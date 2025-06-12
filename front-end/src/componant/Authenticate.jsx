@@ -22,6 +22,7 @@ function Authenticate() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+const [load , setLoad] =  useState(false);
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -54,13 +55,18 @@ function Authenticate() {
         { mobileNo: formData.mobileNo, password: formData.password },
         { withCredentials: true }
       );
-
+      
+      
+     
       if (data.token) {
         localStorage.setItem('authToken', data.token);
         document.cookie = `authToken=${data.token}; path=/; max-age=86400; SameSite=None; Secure`;
+        setLoad((p) => false);
         navigate('/see-record');
       }
+    
     } catch (error) {
+      setLoad((p) => false);
       toast.error(error.response?.data?.msg || 'Login failed');
     }
   };
@@ -75,7 +81,7 @@ function Authenticate() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="w-full max-w-1/2"
+        className="w-full md:max-w-1/2"
       >
         {showLogin ? (
           <motion.div
