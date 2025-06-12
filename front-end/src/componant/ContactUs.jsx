@@ -14,7 +14,7 @@ const ContactUs = () => {
   const [name, setName] = useState()
 
   function handleChange(e) { 
-   const  name = e.target.name 
+   const name  =  e.target.name 
    const value =  e.target.value
   setData({...Data,[name]: value})
   }
@@ -31,7 +31,7 @@ async function handleSubmit(e) {
   }
   console.log("new data is : ",Data)
   
-  const response = axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/contact`,newData, {
+  const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/contact`,newData, {
     withCredentials:true,
     headers: {
        Authorization: localStorage.getItem("authToken"),
@@ -41,6 +41,7 @@ async function handleSubmit(e) {
   }).catch((err)=>{
     console.log(err)
   })
+  console.log(response)
 
   if(response.status === 200){
     const message = "Message has been sent successfully" 
