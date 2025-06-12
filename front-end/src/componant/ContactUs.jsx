@@ -19,10 +19,10 @@ const ContactUs = () => {
   setData({...Data,[name]: value})
   }
 
-const [showToast, setShowToast] = useState(false);
+
 
 async function handleSubmit(e) {
-  setShowToast(true);
+  
   
   e.preventDefault();
   const newData = {
@@ -50,8 +50,8 @@ async function handleSubmit(e) {
     console.log(response)
 
     if (response.status === 200) {
-      notifySuccess("Message has been sent successfully","success");
-      // Reset form after successful submission
+      toast.success("Message has been sent successfully!");
+    
       setData({
         name: "",
         email: "",
@@ -63,7 +63,7 @@ async function handleSubmit(e) {
     console.error("Error sending message:", error);
     toast.error("Message has not been sent! Please try again");
   }
-  setShowToast(false);
+
 }
   return (
     <div className="flex justify-center items-start mt-10 min-h-screen p-4 ">
