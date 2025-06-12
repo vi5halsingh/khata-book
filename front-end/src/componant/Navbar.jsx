@@ -11,7 +11,7 @@ function Navbar() {
 
     return (
         <>
-            <motion.div className="px-3 md:px-0" drag dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}>
+            <motion.div className="z-20 px-3 md:px-0" drag dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}>
                 <section className="nav border-2 border-white p-3 rounded-full flex justify-between items-center md:w-3/5 m-auto mt-5 relative">
                     <div className="left">
                         <div className="logo text-5xl font-bold">
@@ -21,7 +21,7 @@ function Navbar() {
 
                     {/* Mobile menu icon */}
                     <div className="md:hidden">
-                        <button onClick={() => setMenuOpen(!menuOpen)} className="text-4xl">
+                        <button onClick={() => setMenuOpen(!menuOpen)} className="text-4xl cursor-pointer">
                             {menuOpen ? <HiX /> : <HiMenuAlt3 />}
                         </button>
                     </div>

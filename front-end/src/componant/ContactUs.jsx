@@ -19,9 +19,11 @@ const ContactUs = () => {
   setData({...Data,[name]: value})
   }
 
-
+const [showToast, setShowToast] = useState(false);
 
 async function handleSubmit(e) {
+  setShowToast(true);
+  
   e.preventDefault();
   const newData = {
     name: Data.name,
@@ -30,6 +32,10 @@ async function handleSubmit(e) {
     message: Data.message
   };
   
+  if(!Object.values(newData).every((item)=>item.trim())){
+  toast.error("Please fill all the fields")
+      return;
+  }
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/api/users/contact`,
@@ -44,7 +50,7 @@ async function handleSubmit(e) {
     console.log(response)
 
     if (response.status === 200) {
-      toast.success("Message has been sent successfully");
+      notifySuccess("Message has been sent successfully","success");
       // Reset form after successful submission
       setData({
         name: "",
@@ -55,8 +61,9 @@ async function handleSubmit(e) {
     }
   } catch (error) {
     console.error("Error sending message:", error);
-    toast.error(error.response?.data?.msg || "Message has not been sent! Please try again");
+    toast.error("Message has not been sent! Please try again");
   }
+  setShowToast(false);
 }
   return (
     <div className="flex justify-center items-start mt-10 min-h-screen p-4 ">

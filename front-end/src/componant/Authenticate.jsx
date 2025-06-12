@@ -91,7 +91,7 @@ const [load , setLoad] =  useState(false);
             className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/20"
           >
             <h1 className="text-2xl font-bold text-center mb-6 text-[#4caf50]">Log In</h1>
-            <form className="space-y-4" onSubmit={handleLogin}>
+            <form className="space-y-4 relative" onSubmit={handleLogin}>
               <div>
                 <label className="block text-gray-300 mb-2">Mobile Number</label>
                 <input
@@ -143,7 +143,7 @@ const [load , setLoad] =  useState(false);
             className="bg-white/5 backdrop-blur-lg rounded-2xl p-5  overflow-y-auto h-[80vh] w-full border  border-white/20 "
           >
             <h1 className="text-2xl font-bold text-center mb-6 text-[#4caf50]">Sign Up</h1>
-            <form className="space-y-4" onSubmit={handleSignup}>
+            <form className="space-y-4 relative" onSubmit={handleSignup}>
               {['name', 'email', 'mobileNo', 'password' ,'category'].map((field) => (
                 <div key={field}>
                   <label className="block text-gray-300 mb-2 capitalize">
