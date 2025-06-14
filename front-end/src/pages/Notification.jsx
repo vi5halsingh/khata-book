@@ -20,7 +20,7 @@ const Notification = () => {
   };
 
   return (
-    <div className="w-3/5 mx-auto mt-5 p-4  shadow-lg rounded-lg overflow-y-scroll h-screen">
+    <div className="md:w-3/5 mx-auto mt-5 p-4  shadow-lg rounded-lg overflow-y-scroll h-screen">
       <h1 className="text-xl font-bold mb-3 text-center ">Notifications</h1>
       <div className="space-y-2">
         {notifications.map((notification, index) => (

@@ -46,7 +46,7 @@ function RecordList(props) {
       if (response.ok) {
         setRecords(data.data);
       } else {
-        setError( 'Failed to fetch transactions');
+        setError( 'Log in and try again');
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -91,13 +91,13 @@ toast(message);
           props.setTransactionChanged((p) => p? false : true);
         } else {
           const data = await response.json();
-       const message =  data.msg || 'Failed to delete transaction';
+       const message = 'Failed to delete transaction';
        toast(message);
           
         }
       } catch (error) {
         console.error('Error deleting transaction:', error);
-        const message = data.msg || 'Failed to delete transaction';
+        const message =  'Failed to delete transaction';
         toast(message);
       }
     }
@@ -179,6 +179,7 @@ toast(message)
    <Toaster
       position="top-center"
       toastOptions={{
+        autoClose: 2000,
         style: {
           background: '#1a1b29',
           color: '#fff',

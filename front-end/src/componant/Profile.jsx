@@ -52,18 +52,21 @@ function Profile() {
  
   const handleDelete = async () => {
     try {
-      const deleteUserRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/deleteUser`,{},{
+      const deleteUserRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/deleteUser`,{},{
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         withCredentials:true
-      }) 
+      })
+      console.log("deleteUserRes",deleteUserRes)
       if(deleteUserRes.status === 200){
+        
         toast.success("User Deleted Successfully")
         navigate('/')
       }
       
     } catch (error) {
+      console.log(error)
       toast.error("Can't delete user ")
     }
   }

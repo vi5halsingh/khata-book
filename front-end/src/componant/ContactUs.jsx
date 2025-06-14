@@ -61,7 +61,7 @@ async function handleSubmit(e) {
     }
   } catch (error) {
     console.error("Error sending message:", error);
-    toast.error("Message has not been sent! Please try again");
+    toast.error("something went wrong! make sure your logged in ");
   }
 
 }
@@ -128,6 +128,7 @@ async function handleSubmit(e) {
       <Toaster
       position="top-center"
       toastOptions={{
+        
         style: {
           background: '#1a1b29',
           color: '#fff',
