@@ -1,9 +1,11 @@
-
 import React, { useState, useRef } from "react";
 import { Toaster, toast } from 'react-hot-toast';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
+import {GoogleLogin} from '@react-oauth/google'
+import {jwtDecode} from "jwt-decode";
+
 
 function Authenticate() {
  
@@ -70,6 +72,43 @@ const [load , setLoad] =  useState(false);
       toast.error(error.response?.data?.msg || 'Login failed');
     }
   };
+  // onSuccess from GoogleLogin
+const handleGoogleLogin = async (credentialResponse) => {
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/api/users/google-login`,
+      {
+        token: credentialResponse.credential,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (res.data.success && res.data.token) {
+      // Store token in localStorage
+      localStorage.setItem('authToken', res.data.token);
+      
+      // Set cookie
+      document.cookie = `authToken=${res.data.token}; path=/; max-age=86400; SameSite=None; Secure`;
+      
+      // Set default Authorization header for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+      
+      toast.success("Successfully logged in with Google");
+      navigate('/see-record');
+    } else {
+      throw new Error('Invalid response from server');
+    }
+  } catch (error) {
+    console.error('Google login error:', error);
+    toast.error(error.response?.data?.msg || 'Google login failed. Please try again.');
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-start justify-center px-4 py-8 bg-gradient-to-br from-oklch(0.558 0.288 302.321) to-oklch(0.623 0.214 259.815 ) ">
@@ -123,6 +162,13 @@ const [load , setLoad] =  useState(false);
               >
                 Sign In
               </button>
+              <GoogleLogin
+      onSuccess={(credentialResponse) => handleGoogleLogin(credentialResponse)}
+      onError={() => {
+        console.log('Login Failed');
+        toast.error("Google login failed try manually")
+      }}
+    />
             </form>
 
             <p className="text-center mt-4 text-gray-300">

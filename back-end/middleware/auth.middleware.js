@@ -4,13 +4,13 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const authenticationForUser = async (req, res, next) => {
     try {
-        // Get token from header or cookies
         const token = req.cookies?.authToken || req.header('Authorization')?.replace('Bearer ', '');
-      
+        // console.log("from mid", token)
         if (!token) {
+            console.log("no token in middleware")
             return res.status(401).json({ msg: 'Login required, authorization denied' });
         }
-
+        
         // Verify token
         const decoded = jwt.verify(token, JWT_SECRET);
         
@@ -24,7 +24,6 @@ const authenticationForUser = async (req, res, next) => {
         // Add user to request object
         req.user = user;
         req.token = token;
-        
         next();
     } catch (err) {
         console.error('Authentication error:', err.message);

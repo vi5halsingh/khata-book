@@ -16,12 +16,15 @@ app.use(cookieParser())
 app.use(cors({
   origin: [
     'http://localhost:5173', 
-    'https://khata-book-lime.vercel.app', // Add production frontend URL
-    'https://khata-book-r8a8.onrender.com' // Allow backend-to-backend calls
+    'https://khata-book-lime.vercel.app',
+    'https://khata-book-r8a8.onrender.com'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Set-Cookie'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 
 const connectDB = require('./config/db')

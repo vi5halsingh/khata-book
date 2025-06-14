@@ -6,33 +6,51 @@ const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        min: 6,  },
+        min: 2,
+    },
     email: {
         type: String,
         required: true,
-        max: 255, 
+        unique: true,
+        max: 255,
     },
     mobileNo: {
-      type: Number,
-      required: true,
-      man: 10, 
-  },
+        type: Number,
+        required: function() {
+            return !this.isGoogleUser; // Only required for non-Google users
+        },
+        min: 1000000000,
+        max: 9999999999,
+        unique:true
+    },
     password: {
         type: String,
-        required: true,
+        required: function() {
+            return !this.isGoogleUser; // Only required for non-Google users
+        },
         select: false,
-        min: 6, 
+        min: 6,
     },
     category: {
         type: String,
         enum: ['general', 'obc', 'sc/st', ''],
         default: ''
     },
-  socketId: {
-    type: String,
-    min: 6, 
-  }
-
+    isGoogleUser: {
+        type: Boolean,
+        default: false
+    },
+    googleId: {
+        type: String,
+        sparse: true
+    },
+    picture: {
+        type: String
+    },
+    socketId: {
+        type: String,
+        min: 6,
+    }
 }, { timestamps: true });
 
 UserSchema.methods.generateToken =async function() {

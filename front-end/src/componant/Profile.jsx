@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
-import { IoArrowBackOutline } from "react-icons/io5";
+import { IoArrowBackOutline,IoLogOut } from "react-icons/io5";
 import axios from 'axios';
 import { Toaster, toast } from 'react-hot-toast';
 
@@ -23,7 +23,7 @@ function Profile() {
         setEditData(response.data);
         setLoading(false);
       } catch (error) {
-        toast.error(error.response?.data?.msg || 'Failed to load profile');
+        toast.error('Please Do Login');
         if (error.response?.status === 401) navigate('/');
       }
     };
@@ -49,6 +49,24 @@ function Profile() {
     }
   };
 
+ 
+  const handleDelete = async () => {
+    try {
+      const deleteUserRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/deleteUser`,{},{
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+        withCredentials:true
+      }) 
+      if(deleteUserRes.status === 200){
+        toast.success("User Deleted Successfully")
+        navigate('/')
+      }
+      
+    } catch (error) {
+      toast.error("Can't delete user ")
+    }
+  }
   const handleLogout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users/logout`, {}, {
@@ -60,10 +78,9 @@ function Profile() {
       localStorage.removeItem('authToken');
       navigate('/');
     } catch (error) {
-      toast.error(error.response?.data?.msg || 'Logout failed');
+      toast.error('Logout failed');
     }
   };
-
   if (loading) return (
     <div className="flex justify-center items-center min-h-screen">
       <motion.div
@@ -101,6 +118,10 @@ function Profile() {
               <span className="hidden md:inline">Back</span>
             </button>
             <h1 className="text-2xl md:text-3xl font-bold text-[#4caf50]">My Profile</h1>
+            <div className="profile text-5xl font-bold text-[#4caf50] cursor-pointer" 
+          onClick={handleLogout}> 
+            <IoLogOut/>   
+          </div>
             <div></div>
           </div>
 
@@ -178,11 +199,10 @@ function Profile() {
                   Edit Profile
                 </button>
                 <button
-                  onClick={handleLogout}
+                  onClick={handleDelete}
                   className="w-full md:w-1/2 bg-red-500 text-white py-2 md:py-3 rounded-lg hover:bg-red-600 transition-colors"
                 >
-                  Logout
-                </button>
+Delete Your Profile                </button>
               </div>
             </div>
           )}
