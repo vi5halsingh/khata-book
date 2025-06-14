@@ -47,7 +47,7 @@ async function handleSubmit(e) {
         withCredentials: true,
       }
     );
-    console.log(response)
+    
 
     if (response.status === 200) {
       toast.success("Message has been sent successfully!");
@@ -60,7 +60,7 @@ async function handleSubmit(e) {
       });
     }
   } catch (error) {
-    console.error("Error sending message:", error);
+ 
     toast.error("something went wrong! make sure your logged in ");
   }
 
