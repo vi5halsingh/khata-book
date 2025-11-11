@@ -31,11 +31,6 @@ const UserSchema = new mongoose.Schema({
         select: false,
         min: 6,
     },
-    category: {
-        type: String,
-        enum: ['general', 'obc', 'sc/st', ''],
-        default: ''
-    },
     isGoogleUser: {
         type: Boolean,
         default: false

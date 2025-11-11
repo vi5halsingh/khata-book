@@ -47,7 +47,7 @@ res.cookie('authToken', token, {
     secure: process.env.NODE_ENV === 'production', // Use secure in production
     sameSite: 'strict'
   }).json({ 
-    msg: 'Login Success',
+    msg: 'Logged in Success',
     token 
   });
 
@@ -58,7 +58,7 @@ res.cookie('authToken', token, {
     },
     updateProfile: async (req, res) => {
         try {
-            const { name, email, mobileNo, category } = req.body;
+            const { name, email, mobileNo } = req.body;
             
             // Find user by ID (from auth middleware)
             const user = await User.findById(req.user._id);
@@ -71,7 +71,6 @@ res.cookie('authToken', token, {
             if (name) user.name = name;
             if (email) user.email = email;
             if (mobileNo) user.mobileNo = mobileNo;
-            if (category) user.category = category;
             
             // Save updated user
             await user.save();
@@ -82,7 +81,6 @@ res.cookie('authToken', token, {
                     name: user.name,
                     email: user.email,
                     mobileNo: user.mobileNo,
-                    category: user.category
                 }
             });
         } catch (error) {
@@ -155,7 +153,7 @@ res.cookie('authToken', token, {
           });
       
           // Send response with token
-          res.json({
+          res.status(201).json({
             success: true,
             token: authToken,
             user: {
@@ -182,7 +180,7 @@ res.cookie('authToken', token, {
         console.log(user)
         const deleteUser =await User.findByIdAndDelete(user._id)
         if(!deleteUser){
-            res.status(400).json("Something wrong to delete  you")
+            res.status(400).json("Something went while deleting user")
         }
         res.json("goodBye but Hope we will meet soon")
     }

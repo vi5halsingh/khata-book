@@ -8,14 +8,12 @@ import {jwtDecode} from "jwt-decode";
 
 
 function Authenticate() {
- 
   const [showLogin, setShowLogin] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     mobileNo: "",
     password: "",
-    category: ""
   });
   const navigate = useNavigate();
   const mobileInputRef = useRef();
@@ -63,8 +61,8 @@ const [load , setLoad] =  useState(false);
       if (data.token) {
         localStorage.setItem('authToken', data.token);
         document.cookie = `authToken=${data.token}; path=/; max-age=86400; SameSite=None; Secure`;
-        setLoad((p) => false);
         navigate('/see-record');
+        setLoad((p) => false);
       }
     
     } catch (error) {
@@ -141,6 +139,14 @@ const handleGoogleLogin = async (credentialResponse) => {
                   onChange={handleChange}
                   className="w-full bg-white/10 text-white rounded-lg p-3 focus:ring-2 focus:ring-[#4caf50] outline-none"
                   required
+                  onKeyDown={(e)=>{
+                    if(!/[0-9]/.test(e.key) && e.key !=="Backspace" && e.key !== "Tab"){
+                      e.preventDefault()
+                      // toast.error("enter valid mobile number")
+                    }
+                  }}
+                  min={0}
+                  maxLength={10}
                 />
               </div>
               
@@ -191,7 +197,7 @@ const handleGoogleLogin = async (credentialResponse) => {
           >
             <h1 className="text-2xl font-bold text-center mb-6 text-[#4caf50]">Sign Up</h1>
             <form className="space-y-4 relative" onSubmit={handleSignup}>
-              {['name', 'email', 'mobileNo', 'password' ,'category'].map((field) => (
+              {['name', 'email', 'mobileNo', 'password'].map((field) => (
                 <div key={field}>
                   <label className="block text-gray-300 mb-2 capitalize">
                     {field.replace(/([A-Z])/g, ' $1')}
@@ -203,26 +209,10 @@ const handleGoogleLogin = async (credentialResponse) => {
                     onChange={handleChange}
                     className="w-full bg-white/10 text-white rounded-lg p-3 focus:ring-2 focus:ring-[#4caf50] outline-none"
                     required
+                    
                   />
                 </div>
               ))}
-
-              <div>
-                <label className="block text-gray-300 mb-2">Category</label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  className="w-full bg-white/10 text-white rounded-lg p-3 focus:ring-2 focus:ring-[#4caf50] outline-none"
-                  required
-                >
-                  <option value="" className="bg-[#6e86ff]">Select Category</option>
-                  <option value="general" className="bg-[#6e86ff] font-medium">General</option>
-                  <option value="obc" className="bg-[#6e86ff] font-medium">OBC</option>
-                  <option value="sc/st" className="bg-[#6e86ff] font-medium">SC/ST</option>
-                </select>
-              </div>
-
               <button
                 type="submit"
                 className="w-full bg-[#4caf50] text-white py-3 rounded-lg hover:bg-[#3d8b40] transition-colors"

@@ -28,6 +28,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.1",
     "nodemailer": "^7.0.3",
+    "razorpay": "^2.9.6",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "winston": "^3.17.0"
