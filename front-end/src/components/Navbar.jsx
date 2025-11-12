@@ -15,7 +15,7 @@ function Navbar() {
                 <section className="nav border-2 border-white p-3 rounded-full flex justify-between items-center md:w-3/5 m-auto mt-5 relative">
                     <div className="left">
                         <div className="logo text-5xl font-bold">
-                            <Link to='/dashboard'> <FcCurrencyExchange /> </Link>
+                             <FcCurrencyExchange /> 
                         </div>
                     </div>
 

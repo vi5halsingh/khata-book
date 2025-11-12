@@ -1,4 +1,8 @@
 const Transaction = require('../Models/Transaction.Model');
+const {
+    upsertTransactionVector,
+    deleteTransactionVector,
+} = require('../services/vector.service');
 
 const TransactionController = {
     // Create a new transaction
@@ -22,6 +26,12 @@ const TransactionController = {
             
             // Save transaction
             await newTransaction.save();
+
+            try {
+                await upsertTransactionVector(newTransaction);
+            } catch (vectorError) {
+                console.error('Pinecone upsert failed (create):', vectorError);
+            }
             
             res.status(201).json({
                 success: true,
@@ -135,6 +145,12 @@ const TransactionController = {
             
             // Save updated transaction
             await transaction.save();
+
+            try {
+                await upsertTransactionVector(transaction);
+            } catch (vectorError) {
+                console.error('Pinecone upsert failed (update):', vectorError);
+            }
             
             res.json({
                 success: true,
@@ -159,6 +175,12 @@ const TransactionController = {
             // Check if transaction belongs to user
             if (transaction.user.toString() !== req.user._id.toString()) {
                 return res.status(401).json({ msg: 'Not authorized to delete this transaction' });
+            }
+
+            try {
+                await deleteTransactionVector(req.user._id, transaction._id);
+            } catch (vectorError) {
+                console.error('Pinecone delete failed:', vectorError);
             }
             
             await Transaction.deleteOne({ _id: req.params.id });

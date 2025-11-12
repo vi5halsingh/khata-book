@@ -4,7 +4,7 @@ import AddNewTransection from '../components/AddNewTransection'
 const RecordList = React.lazy(() => import('../components/RecordList'))
 const TransactionSummary  = React.lazy(()=> import('../components/TransactionSummary'))
 const AIChatBot = React.lazy(()=> import ('../components/AIChatBot'))
-const Sidebar = React.lazy(() => import('../components/Sidebar'))
+
 
 export function SeeRecord() {
     const [Adding, setAdding] = useState(false);
@@ -16,11 +16,8 @@ export function SeeRecord() {
                         <RecordHeader Adding={Adding} setAdding={setAdding} />
                         {/* Layout: sidebar + main content */}
                         <div className="flex">
-                            <React.Suspense fallback={null}>
-                                <Sidebar activeModule={activeModule} setActiveModule={setActiveModule} />
-                            </React.Suspense>
 
-                            <main className="flex-1 ml-56 p-4">
+                            <main className="flex-1 p-4">
             {/* <TransactionSummary transactionChanged={transactionChanged} /> */}
                                 <RecordList
                                     Adding={Adding}

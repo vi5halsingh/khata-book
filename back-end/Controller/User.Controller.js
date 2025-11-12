@@ -1,7 +1,13 @@
 const User = require('../Models/User.Model');
 const { OAuth2Client, GoogleAuth } = require('google-auth-library');
 const jwt = require('jsonwebtoken')
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+
+if (!GOOGLE_CLIENT_ID) {
+    console.warn('[User.Controller] Missing GOOGLE_CLIENT_ID environment variable. Google login will fail.');
+}
+
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 const UserController = {
     register: async (req, res) => {
         try {
@@ -106,6 +112,12 @@ res.cookie('authToken', token, {
     },
     GoogleLogin:  async (req, res) => {
         try {
+          if (!GOOGLE_CLIENT_ID) {
+            return res.status(500).json({
+              success: false,
+              msg: 'Google login is not configured. Please set the GOOGLE_CLIENT_ID environment variable.'
+            });
+          }
           const { token } = req.body;
           
           if (!token) {

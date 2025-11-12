@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { IoPencil, IoShareSocial, IoTrash } from 'react-icons/io5';
 import { FaStar } from 'react-icons/fa';
 import TransactionFilter from './TransactionFilter';
@@ -19,6 +19,7 @@ function RecordList(props) {
     endDate: '',
     sort: 'newest'
   });
+  const [selectedIds, setSelectedIds] = useState(new Set());
   
   // Fetch transactions from API with filters
   const fetchTransactions = async () => {
@@ -75,6 +76,10 @@ toast(message);
     fetchTransactions();
   }, [filters, props.Adding, props.transactionChanged]); 
 
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [records]);
+
   const removetransectionForm = () => {
     props.setAdding((p) => p ? false : false);
   };
@@ -82,6 +87,136 @@ toast(message);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
+  };
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    setSelectedIds((prev) => {
+      if (prev.size === records.length) {
+        return new Set();
+      }
+      return new Set(records.map((record) => record._id));
+    });
+  };
+
+  const selectedRecords = useMemo(
+    () => records.filter((record) => selectedIds.has(record._id)),
+    [records, selectedIds]
+  );
+
+  const createPrintableHtml = (list) => {
+    const rows = list
+      .map(
+        (record, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${record.type?.toUpperCase() || '-'}</td>
+            <td>${Number(record.amount || 0).toFixed(2)}</td>
+            <td>${record.description || '-'}</td>
+            <td>${new Date(record.date).toLocaleDateString()}</td>
+          </tr>
+        `
+      )
+      .join('');
+
+    return `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Transactions Export</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 24px; color: #111827; }
+            h1 { text-align: center; margin-bottom: 16px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: left; }
+            th { background-color: #111827; color: #fff; }
+            tr:nth-child(even) { background-color: #f3f4f6; }
+          </style>
+        </head>
+        <body>
+          <h1>Transaction Summary</h1>
+          <p>Generated on ${new Date().toLocaleString()}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Amount (Rs)</th>
+                <th>Description</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `;
+  };
+
+  const handlePrintSelected = () => {
+    if (selectedRecords.length === 0) {
+      toast.error('Please select at least one transaction to print.');
+      return;
+    }
+
+    const printWindow = window.open('', '_blank', 'noopener,noreferrer');
+    if (!printWindow) {
+      toast.error('Unable to open print preview. Please allow pop-ups for this site.');
+      return;
+    }
+
+    printWindow.document.write(createPrintableHtml(selectedRecords));
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  };
+
+  const handleDownloadSelected = () => {
+    if (selectedRecords.length === 0) {
+      toast.error('Please select at least one transaction to save.');
+      return;
+    }
+
+    const headers = ['Type', 'Amount', 'Description', 'Date'];
+    const csvRows = [
+      headers.join(','),
+      ...selectedRecords.map((record) =>
+        [
+          record.type,
+          Number(record.amount || 0).toFixed(2),
+          `"${(record.description || '').replace(/"/g, '""')}"`,
+          new Date(record.date).toLocaleDateString(),
+        ].join(',')
+      ),
+    ];
+
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute(
+      'download',
+      `transactions-${new Date().toISOString().split('T')[0]}.csv`
+    );
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success('Selected transactions exported successfully.');
   };
   
   // Handle delete transaction
@@ -200,9 +335,36 @@ toast(message)
       }}
     />
     <div onClick={() => removetransectionForm()} className="text-white md:p-5 rounded-lg md:mx-auto mt-5 shadow-lg backdrop-blur-lg border border-white/20 md:max-w-4/5 overflow-y-scroll mb-5 h-[80vh] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
-      <div className="flex justify-center items-center bg-gray-800 p-3 rounded-md sticky top-0">
+      <div className="flex flex-col gap-3 bg-gray-800 p-3 rounded-md sticky top-0">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold">Transactions</h2>
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={records.length > 0 && selectedIds.size === records.length}
+                onChange={toggleSelectAll}
+                className="w-4 h-4 accent-blue-500"
+              />
+              Select All
+            </label>
+            <button
+              onClick={handleDownloadSelected}
+              className="px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-xs sm:text-sm transition disabled:opacity-50"
+              disabled={selectedRecords.length === 0}
+            >
+              Save CSV
+            </button>
+            <button
+              onClick={handlePrintSelected}
+              className="px-3 py-1.5 rounded-md bg-blue-500 hover:bg-blue-600 text-xs sm:text-sm transition disabled:opacity-50"
+              disabled={selectedRecords.length === 0}
+            >
+              Print Selected
+            </button>
+          </div>
+        </div>
         {/* <button className="text-xl">⬅️</button> */}
-        <h2 className="text-xl font-bold">Transactions</h2>
         {/* <button className="text-xl">➡️</button> */}
       </div>
       
@@ -224,9 +386,17 @@ toast(message)
             className="md:flex items-center justify-between p-3 my-3 rounded-md shadow-md border border-gray-700"
             style={{ backgroundColor: record.type === "income" ? "#1e4620" : "#641e1e" }}
           >
-            <span className="text-white font-bold p-2 rounded-md" style={{ backgroundColor: record.type === "income" ? "#4caf50" : "#d32f2f" }}>
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                checked={selectedIds.has(record._id)}
+                onChange={() => toggleSelect(record._id)}
+                className="w-4 h-4 accent-blue-500"
+              />
+              <span className="text-white font-bold p-2 rounded-md" style={{ backgroundColor: record.type === "income" ? "#4caf50" : "#d32f2f" }}>
               Rs. {record.amount}
             </span>
+            </div>
             {editingId === record._id ? (
               <input
                 type="text"

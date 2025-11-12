@@ -29,4 +29,9 @@ Router.post('/contact',authMiddleware, (req, res) =>{
 Router.post('/google-login',UserController.GoogleLogin);
 Router.post('/deleteUser',authMiddleware,UserController.DeleteProfile);
 
+Router.get('/google-client-id', (req, res) => {
+    const clientId = process.env.GOOGLE_CLIENT_ID || null;
+    res.json({ clientId });
+});
+
 module.exports = Router;
