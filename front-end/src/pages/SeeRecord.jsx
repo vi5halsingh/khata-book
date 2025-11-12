@@ -1,27 +1,45 @@
 import React,{useState , useEffect} from 'react'
-import RecordHeader from '../componant/RecoedHeader'
-import AddNewTransection from '../componant/AddNewTransection'
-const RecordList = React.lazy(() => import('../componant/RecordList'))
-const TransactionSummary  = React.lazy(()=> import('../componant/TransactionSummary'))
-const AIChatBot = React.lazy(()=> import ('../componant/AIChatBot'))
+import RecordHeader from '../components/RecoedHeader'
+import AddNewTransection from '../components/AddNewTransection'
+const RecordList = React.lazy(() => import('../components/RecordList'))
+const TransactionSummary  = React.lazy(()=> import('../components/TransactionSummary'))
+const AIChatBot = React.lazy(()=> import ('../components/AIChatBot'))
+const Sidebar = React.lazy(() => import('../components/Sidebar'))
 
 export function SeeRecord() {
     const [Adding, setAdding] = useState(false);
     const [transactionChanged, setTransactionChanged] = useState(false);
+        const [activeModule, setActiveModule] = useState('dashboard');
     
     return (
         <>
-            <RecordHeader Adding={Adding} setAdding={setAdding} />
+                        <RecordHeader Adding={Adding} setAdding={setAdding} />
+                        {/* Layout: sidebar + main content */}
+                        <div className="flex">
+                            <React.Suspense fallback={null}>
+                                <Sidebar activeModule={activeModule} setActiveModule={setActiveModule} />
+                            </React.Suspense>
+
+                            <main className="flex-1 ml-56 p-4">
             {/* <TransactionSummary transactionChanged={transactionChanged} /> */}
+                                <RecordList
+                                    Adding={Adding}
+                                    setAdding={setAdding}
+                                    transactionChanged={transactionChanged}
+                                    setTransactionChanged={setTransactionChanged}
+                                    moduleFilter={activeModule}
+                                />
 
-            <RecordList Adding={Adding} setAdding={setAdding} transactionChanged={transactionChanged} setTransactionChanged={setTransactionChanged}/>
+                                <div className={`${Adding ?  'visible' : 'hidden'}`}>
+                                        <AddNewTransection Adding={Adding} setAdding={setAdding} setTransactionChanged={setTransactionChanged} />
+                                </div>
 
-            <div className={`${Adding ?  'visible' : 'hidden'}`}>
-                <AddNewTransection Adding={Adding} setAdding={setAdding} setTransactionChanged={setTransactionChanged} />
-            </div>
-
-            {/* AI Chatbot Component */}
-            <AIChatBot />
+                                {/* AI Chatbot Component */}
+                                <React.Suspense fallback={null}>
+                                    <AIChatBot />
+                                </React.Suspense>
+                            </main>
+                        </div>
         </>
     );
 }

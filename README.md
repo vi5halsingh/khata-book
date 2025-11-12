@@ -29,7 +29,7 @@ This README is written in plain language for team members who will develop, test
 
 - `/front-end` — UI code
     - `src/pages` — main pages (Home, SeeRecord, etc.)
-    - `src/componant` — reusable components (RecordList, AddNewTransection, AIChatBot)
+    - `src/components` — reusable components (RecordList, AddNewTransection, AIChatBot)
     - `src/utils/axiosConfig.js` — axios instance (if used)
 
 ## Important files and where to look
@@ -137,7 +137,7 @@ Response shapes follow common REST patterns and usually return { success: boolea
 ## Frontend notes
 
 - Frontend uses Vite and React (React 19+). Routes are configured in `src/App.jsx`.
-- `front-end/src/componant/AIChatBot.jsx` is a UI-only chatbot component added to the SeeRecord page. It currently simulates responses locally — to enable AI features, create a backend `/api/ai/chat` endpoint and connect the component to it.
+- `front-end/src/components/AIChatBot.jsx` is a UI-only chatbot component added to the SeeRecord page. It currently simulates responses locally — to enable AI features, create a backend `/api/ai/chat` endpoint and connect the component to it.
 - The main transaction UI is `RecordList.jsx` which fetches transactions using `VITE_API_BASE_URL` and expects the token in `Authorization` header.
 
 ## Development workflow & conventions
@@ -165,7 +165,7 @@ To make the chatbot actually analyze transactions:
 3. Return the model response to the frontend; update `AIChatBot.jsx` to call that endpoint instead of the current simulated reply.
 
 Files to look at for chatbot work:
-- `front-end/src/componant/AIChatBot.jsx` — UI and send logic (currently simulated)
+- `front-end/src/components/AIChatBot.jsx` — UI and send logic (currently simulated)
 - `back-end/Controller/*` — add `AIController.js` and route `/api/ai`
 
 ## Contribution

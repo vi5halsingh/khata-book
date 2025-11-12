@@ -7,6 +7,7 @@ import { Toaster, toast } from 'react-hot-toast';
 
 
 function RecordList(props) {
+  const { moduleFilter } = props || {};
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -58,6 +59,17 @@ toast(message);
     }
   };
   
+
+  // Apply external module filter (dashboard/income/expense) by updating local filters
+  useEffect(() => {
+    if (!moduleFilter) return;
+    if (moduleFilter === 'dashboard') {
+      setFilters(prev => ({ ...prev, type: '' }));
+    } else if (moduleFilter === 'income' || moduleFilter === 'expense') {
+      setFilters(prev => ({ ...prev, type: moduleFilter }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moduleFilter]);
 
   useEffect(() => {
     fetchTransactions();

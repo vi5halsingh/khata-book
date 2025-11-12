@@ -1,5 +1,5 @@
 import React from "react";
-import ContactUs from "../componant/ContactUs";
+import ContactUs from "../components/ContactUs";
 
 export function SaySomething(){
     return (<>

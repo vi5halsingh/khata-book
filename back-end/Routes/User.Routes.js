@@ -19,7 +19,7 @@ Router.post('/login', UserController.login);
 Router.put('/profile/update', authMiddleware, UserController.updateProfile);
 Router.post('/logout', UserController.logout);
 
-const ReciveEmail = require('../services/EmailSender.js');
+const ReciveEmail = require('../services/EmailSender.service.js');
 Router.post('/contact',authMiddleware, (req, res) =>{
     const { name, email, mobile, message } = req.body;
     ReciveEmail(name, email, mobile, message);
