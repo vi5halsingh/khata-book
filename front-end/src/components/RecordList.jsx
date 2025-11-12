@@ -174,16 +174,46 @@ toast(message);
       return;
     }
 
+    const html = createPrintableHtml(selectedRecords);
     const printWindow = window.open('', '_blank', 'noopener,noreferrer');
-    if (!printWindow) {
-      toast.error('Unable to open print preview. Please allow pop-ups for this site.');
+
+    if (printWindow && printWindow.document) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
       return;
     }
 
-    printWindow.document.write(createPrintableHtml(selectedRecords));
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
+    // Fallback for blocked pop-ups: use hidden iframe
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+
+    const iframeDoc = iframe.contentWindow || iframe.contentDocument;
+    if (!iframeDoc) {
+      toast.error('Printing is not supported in this browser.');
+      document.body.removeChild(iframe);
+      return;
+    }
+
+    const doc = iframeDoc.document || iframeDoc;
+    doc.open();
+    doc.write(html);
+    doc.close();
+
+    setTimeout(() => {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, 200);
+    }, 100);
   };
 
   const handleDownloadSelected = () => {

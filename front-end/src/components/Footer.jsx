@@ -88,10 +88,10 @@ function Footer() {
                 Email: support@khatabook.com
               </li>
               <li className="text-gray-300">
-                Phone: +91 1234567890
+                Phone: +91 8815915821
               </li>
               <li className="text-gray-300">
-                Address: 123 Business Street, City, State, India
+                Address: civil ward no. 7, Damoh , M.P. , India
               </li>
             </ul>
           </div>
